@@ -182,15 +182,34 @@ module "cloudfront" {
 }
 
 module "route53" {
-  source                    = "../../modules/route53"
-  providers                 = { aws.us_east_1 = aws.us_east_1 }
-  project                   = var.project
-  domain_name               = var.domain_name
-  hosted_zone_name          = var.hosted_zone_name
-  cloudfront_domain_name    = module.cloudfront.domain_name
-  cloudfront_hosted_zone_id = module.cloudfront.hosted_zone_id
-  tags                      = local.common_tags
-  depends_on                = [module.cloudfront]
+  source           = "../../modules/route53"
+  providers        = { aws = aws.us_east_1 }
+  project          = var.project
+  domain_name      = var.domain_name
+  hosted_zone_name = var.hosted_zone_name
+  tags             = local.common_tags
+}
+
+resource "aws_route53_record" "apex" {
+  zone_id = module.route53.zone_id
+  name    = var.domain_name
+  type    = "A"
+  alias {
+    name                   = module.cloudfront.domain_name
+    zone_id                = module.cloudfront.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
+resource "aws_route53_record" "www" {
+  zone_id = module.route53.zone_id
+  name    = "www.${var.domain_name}"
+  type    = "A"
+  alias {
+    name                   = module.cloudfront.domain_name
+    zone_id                = module.cloudfront.hosted_zone_id
+    evaluate_target_health = false
+  }
 }
 
 module "ec2" {
