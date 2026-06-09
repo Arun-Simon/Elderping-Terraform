@@ -35,9 +35,17 @@ resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail" {
   rule {
     id     = "archive-and-expire"
     status = "Enabled"
-    transition { days = 90;   storage_class = "STANDARD_IA" }
-    transition { days = 365;  storage_class = "GLACIER" }
-    expiration { days = 2555 }
+    transition {
+      days          = 90
+      storage_class = "STANDARD_IA"
+    }
+    transition {
+      days          = 365
+      storage_class = "GLACIER"
+    }
+    expiration {
+      days = 2555
+    }
   }
 }
 
@@ -76,7 +84,15 @@ resource "aws_iam_role" "cloudtrail_cw" {
   name = "${var.project}-cloudtrail-cw-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [{ Action = "sts:AssumeRole"; Effect = "Allow"; Principal = { Service = "cloudtrail.amazonaws.com" } }]
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "cloudtrail.amazonaws.com"
+        }
+      }
+    ]
   })
   tags = var.tags
 }
@@ -88,7 +104,7 @@ resource "aws_iam_role_policy" "cloudtrail_cw" {
     Version = "2012-10-17"
     Statement = [{
       Effect   = "Allow"
-      Action   = ["logs:CreateLogStream","logs:PutLogEvents"]
+      Action   = ["logs:CreateLogStream", "logs:PutLogEvents"]
       Resource = "${aws_cloudwatch_log_group.cloudtrail.arn}:*"
     }]
   })

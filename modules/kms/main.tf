@@ -16,25 +16,25 @@ resource "aws_kms_key" "main" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid    = "Enable IAM User Permissions"
-        Effect = "Allow"
+        Sid       = "Enable IAM User Permissions"
+        Effect    = "Allow"
         Principal = { AWS = "arn:aws:iam::${local.account_id}:root" }
-        Action   = "kms:*"
-        Resource = "*"
+        Action    = "kms:*"
+        Resource  = "*"
       },
       {
-        Sid    = "Allow CloudWatch Logs"
-        Effect = "Allow"
+        Sid       = "Allow CloudWatch Logs"
+        Effect    = "Allow"
         Principal = { Service = "logs.${local.region}.amazonaws.com" }
-        Action   = ["kms:Encrypt","kms:Decrypt","kms:ReEncrypt*","kms:GenerateDataKey*","kms:DescribeKey"]
-        Resource = "*"
+        Action    = ["kms:Encrypt", "kms:Decrypt", "kms:ReEncrypt*", "kms:GenerateDataKey*", "kms:DescribeKey"]
+        Resource  = "*"
       },
       {
-        Sid    = "Allow SNS"
-        Effect = "Allow"
+        Sid       = "Allow SNS"
+        Effect    = "Allow"
         Principal = { Service = "sns.amazonaws.com" }
-        Action   = ["kms:Decrypt","kms:GenerateDataKey*"]
-        Resource = "*"
+        Action    = ["kms:Decrypt", "kms:GenerateDataKey*"]
+        Resource  = "*"
       }
     ]
   })
@@ -56,18 +56,18 @@ resource "aws_kms_key" "cloudtrail" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid    = "Enable IAM User Permissions"
-        Effect = "Allow"
+        Sid       = "Enable IAM User Permissions"
+        Effect    = "Allow"
         Principal = { AWS = "arn:aws:iam::${local.account_id}:root" }
-        Action   = "kms:*"
-        Resource = "*"
+        Action    = "kms:*"
+        Resource  = "*"
       },
       {
-        Sid    = "Allow CloudTrail to encrypt logs"
-        Effect = "Allow"
+        Sid       = "Allow CloudTrail to encrypt logs"
+        Effect    = "Allow"
         Principal = { Service = "cloudtrail.amazonaws.com" }
-        Action   = ["kms:GenerateDataKey*","kms:DescribeKey"]
-        Resource = "*"
+        Action    = ["kms:GenerateDataKey*", "kms:DescribeKey"]
+        Resource  = "*"
         Condition = {
           StringLike = {
             "kms:EncryptionContext:aws:cloudtrail:arn" = "arn:aws:cloudtrail:*:${local.account_id}:trail/*"

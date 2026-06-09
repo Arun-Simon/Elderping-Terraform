@@ -1,9 +1,18 @@
 terraform {
   required_version = ">= 1.7.0"
   required_providers {
-    aws    = { source = "hashicorp/aws";    version = "~> 5.40" }
-    random = { source = "hashicorp/random"; version = "~> 3.6" }
-    archive = { source = "hashicorp/archive"; version = "~> 2.4" }
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.40"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.6"
+    }
+    archive = {
+      source  = "hashicorp/archive"
+      version = "~> 2.4"
+    }
   }
 
   backend "s3" {
@@ -76,20 +85,20 @@ module "security_groups" {
 
 data "aws_route_table" "private_app_a" { subnet_id = module.vpc.private_app_subnet_a_id }
 data "aws_route_table" "private_app_b" { subnet_id = module.vpc.private_app_subnet_b_id }
-data "aws_route_table" "private_db"    { subnet_id = module.vpc.private_db_subnet_a_id }
+data "aws_route_table" "private_db" { subnet_id = module.vpc.private_db_subnet_a_id }
 
 module "endpoints" {
-  source                  = "../../modules/endpoints"
-  project                 = var.project
-  vpc_id                  = module.vpc.vpc_id
-  private_app_subnet_ids  = module.vpc.private_app_subnet_ids
+  source                 = "../../modules/endpoints"
+  project                = var.project
+  vpc_id                 = module.vpc.vpc_id
+  private_app_subnet_ids = module.vpc.private_app_subnet_ids
   private_route_table_ids = [
     data.aws_route_table.private_app_a.id,
     data.aws_route_table.private_app_b.id,
     data.aws_route_table.private_db.id
   ]
-  vpc_endpoint_sg_id      = module.security_groups.vpc_endpoints_sg_id
-  tags                    = local.common_tags
+  vpc_endpoint_sg_id = module.security_groups.vpc_endpoints_sg_id
+  tags               = local.common_tags
 }
 
 module "s3" {
@@ -141,8 +150,8 @@ module "secrets_manager" {
 }
 
 module "waf" {
-  source = "../../modules/waf"
-  providers = { aws = aws.us_east_1 }
+  source         = "../../modules/waf"
+  providers      = { aws = aws.us_east_1 }
   project        = var.project
   log_bucket_arn = module.s3.bucket_arns["logs"]
   tags           = local.common_tags
@@ -173,8 +182,8 @@ module "cloudfront" {
 }
 
 module "route53" {
-  source = "../../modules/route53"
-  providers = { aws.us_east_1 = aws.us_east_1 }
+  source                    = "../../modules/route53"
+  providers                 = { aws.us_east_1 = aws.us_east_1 }
   project                   = var.project
   domain_name               = var.domain_name
   hosted_zone_name          = var.hosted_zone_name

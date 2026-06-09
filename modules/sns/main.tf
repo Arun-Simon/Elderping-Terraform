@@ -33,11 +33,11 @@ resource "aws_sns_topic_policy" "reminders" {
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Sid    = "AllowLambdaPublish"
-      Effect = "Allow"
+      Sid       = "AllowLambdaPublish"
+      Effect    = "Allow"
       Principal = { AWS = var.lambda_role_arn != "" ? var.lambda_role_arn : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root" }
-      Action   = "sns:Publish"
-      Resource = aws_sns_topic.reminders.arn
+      Action    = "sns:Publish"
+      Resource  = aws_sns_topic.reminders.arn
     }]
   })
 }

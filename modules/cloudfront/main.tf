@@ -23,15 +23,15 @@ resource "aws_cloudfront_distribution" "main" {
   }
 
   default_cache_behavior {
-    allowed_methods        = ["DELETE","GET","HEAD","OPTIONS","PATCH","POST","PUT"]
-    cached_methods         = ["GET","HEAD"]
+    allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods         = ["GET", "HEAD"]
     target_origin_id       = "${var.project}-alb-origin"
     viewer_protocol_policy = "redirect-to-https"
     compress               = true
     forwarded_values {
       query_string = true
-      headers      = ["Host","Authorization","CloudFront-Forwarded-Proto"]
-      cookies      { forward = "all" }
+      headers      = ["Host", "Authorization", "CloudFront-Forwarded-Proto"]
+      cookies { forward = "all" }
     }
     min_ttl     = 0
     default_ttl = 0
@@ -40,14 +40,14 @@ resource "aws_cloudfront_distribution" "main" {
 
   ordered_cache_behavior {
     path_pattern           = "/static/*"
-    allowed_methods        = ["GET","HEAD"]
-    cached_methods         = ["GET","HEAD"]
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
     target_origin_id       = "${var.project}-alb-origin"
     viewer_protocol_policy = "redirect-to-https"
     compress               = true
     forwarded_values {
       query_string = false
-      cookies      { forward = "none" }
+      cookies { forward = "none" }
     }
     min_ttl     = 86400
     default_ttl = 604800

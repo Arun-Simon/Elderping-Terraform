@@ -10,11 +10,11 @@ resource "aws_iam_role" "ec2" {
   name = "${var.project}-ec2-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [{ 
-        Action = "sts:AssumeRole" 
-        Effect = "Allow"
-        Principal = { Service = "ec2.amazonaws.com" } 
-        }]
+    Statement = [{
+      Action    = "sts:AssumeRole"
+      Effect    = "Allow"
+      Principal = { Service = "ec2.amazonaws.com" }
+    }]
   })
   tags = var.tags
 }
@@ -38,20 +38,20 @@ resource "aws_iam_role_policy" "ec2_custom" {
       {
         Sid      = "SecretsManagerRead"
         Effect   = "Allow"
-        Action   = ["secretsmanager:GetSecretValue","secretsmanager:DescribeSecret"]
+        Action   = ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"]
         Resource = "arn:aws:secretsmanager:${local.region}:${local.account_id}:secret:${var.project}/*"
       },
       {
         Sid      = "KMSDecrypt"
         Effect   = "Allow"
-        Action   = ["kms:Decrypt","kms:GenerateDataKey"]
+        Action   = ["kms:Decrypt", "kms:GenerateDataKey"]
         Resource = [var.kms_key_arn]
       },
       {
         Sid      = "S3Access"
         Effect   = "Allow"
-        Action   = ["s3:GetObject","s3:PutObject","s3:DeleteObject","s3:ListBucket"]
-        Resource = ["arn:aws:s3:::${var.app_s3_bucket_name}","arn:aws:s3:::${var.app_s3_bucket_name}/*"]
+        Action   = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListBucket"]
+        Resource = ["arn:aws:s3:::${var.app_s3_bucket_name}", "arn:aws:s3:::${var.app_s3_bucket_name}/*"]
       }
     ]
   })
