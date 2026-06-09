@@ -1,0 +1,17 @@
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+*.auto.tfvars
+!terraform.tfvars.example
+*.plan
+tfplan
+tfplan.txt
+modules/lambda/reminder_lambda.zip
+modules/lambda/lambda_src/__pycache__/
+.DS_Store
+.idea/
+.vscode/
+*.swp
