@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.40"
+    }
+  }
+}
+
 resource "aws_wafv2_web_acl" "main" {
   name        = "${var.project}-waf"
   description = "ElderPing WAF"

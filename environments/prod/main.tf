@@ -21,7 +21,7 @@ terraform {
     region         = "us-east-1"
     encrypt        = true
     kms_key_id     = "alias/elderping-main"
-    dynamodb_table = "elderping-terraform-locks"
+    use_lockfile   = true
   }
 }
 
